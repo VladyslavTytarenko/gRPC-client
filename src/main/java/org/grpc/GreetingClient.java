@@ -6,6 +6,9 @@ import com.grpc.GreetingServiceOuterClass.HelloResponse;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.Iterator;
+import java.util.stream.StreamSupport;
+
 import static com.grpc.GreetingServiceGrpc.newBlockingStub;
 
 public class GreetingClient {
@@ -22,8 +25,9 @@ public class GreetingClient {
         HelloRequest request = HelloRequest.newBuilder()
                 .setName(name).build();
 
-        HelloResponse response = stub.greeting(request);
-        System.out.println(response.getGreeting());
+        Iterator<HelloResponse> response = stub.greeting(request);
+
+        while (response.hasNext()) System.out.println(response.next().getGreeting());
 
         channel.shutdown();
     }
